@@ -11,7 +11,7 @@ library(cowplot)
 lt = function(x) x[lower.tri(x)]
 ztrans = function(x) 0.5 * log((1 + x) / (1 - x))
 inv_ztrans = function(x) (exp(2*x) - 1) / (exp(2*x) + 1)
-EMMLiDeGente = function(mod.cor, hypot_list, n){
+Yamda = function(mod.cor, hypot_list, n){
     z.mod.cor = ztrans(mod.cor)
     n_models = length(hypot_list)
     if(is.null(names(hypot_list)))
@@ -95,7 +95,7 @@ diag(mod.cor) = 1
 hypot_list = list(true_hypots, hypots)
                            
 # Função em si. Ela retorna uma lista com a comparação de modelos, as estimativas dos coeficientes pra cada modulo e a matriz "esperada"                           
-x = EMMLiDeGente(mod.cor, hypot_list, 10)
+x = Yamda(mod.cor, hypot_list, 10)
 
 # Plot da matriz original com a esperada. Nesse caso é ótimo...
 plot_grid(superheat(mod.cor)[[2]], superheat(x[[3]][[1]])[[2]] )
