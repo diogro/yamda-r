@@ -20,7 +20,7 @@ Yamda = function(mod.cor, hypot_list, n){
     expected_matrices = vector("list", n_models)
     module_correlations = vector("list", n_models)
     for(i in seq_along(hypot_list)){
-        current_hypot = hypot_list[[i]]
+        current_hypot = as.matrix(hypot_list[[i]])
         n_modules = ncol(current_hypot)
         if(is.null(colnames(current_hypot)))
             colnames(current_hypot) = paste("module", 1:n_modules, sep = "_")
