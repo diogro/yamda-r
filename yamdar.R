@@ -27,8 +27,8 @@ Yamda = function(mod.cor, hypot_list, n, nneg = FALSE){
     n_modules = ncol(current_hypot)
     if(is.null(colnames(current_hypot)))
       colnames(current_hypot) = paste("module", 1:n_modules, sep = "_")
-    mod_pred = t(laply(CreateHypotMatrix(current_hypot), function(x) x[lower.tri(x)]))[,1:n_modules]
-    m1 = penalized(lt(z.mod.cor), ~ mod_pred, ~1, lambda1 = 0, lambda2 = 0, positive=nneg)
+    mod_pred = t(laply(CreateHypotMatrix(current_hypot), lt))[,1:n_modules]
+    m1 = penalized(lt(z.mod.cor), ~ mod_pred, ~1, lambda1 = 0, lambda2 = 0, positive = nneg)
     module_correlations[[i]] = inv_ztrans(coef(m1,"all"))
     names(module_correlations[[i]]) = c("background", colnames(current_hypot))
     expected = Reduce("+", Map("*", coef(m1,"all")[2:(n_modules+1)],
