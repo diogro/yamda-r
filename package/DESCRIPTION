@@ -19,7 +19,10 @@ Imports:
     utils
 Suggests:
     testthat,
+    knitr,
+    rmarkdown,
     superheat
+VignetteBuilder: knitr
 LazyData: true
 BugReports: https://github.com/diogro/yamda-r/issues
 RoxygenNote: 6.0.0

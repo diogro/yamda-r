@@ -3,7 +3,7 @@
 #' @name yamdar
 #' @docType package
 #' @importFrom methods is
-#' @importFrom stats cor cov cov2cor lm quantile reorder residuals rnorm runif sd var
+#' @importFrom stats cor cov cov2cor lm quantile reorder residuals rnorm runif sd var cutree dist hclust
 #' @importFrom utils write.csv write.table
 NULL
 
