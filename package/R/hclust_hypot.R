@@ -4,16 +4,22 @@
 #' @export
 #' @param x correlation matrix
 #' @param ... aditional arguments to hclust
+#' @importFrom plyr llply
 hclustHypot <- function(x, ...){
   cluster = hclust(dist(x), ...)
   hypot = NULL
-  for(h in cluster$height){
+  hypot_list = vector("list", length(cluster$height))
+  for(i in seq_along(cluster$height)){
+    h = cluster$height[i]
     membership = cutree(cluster, h = h)
-    if(is.null(hypot)) hypot = toHypotMatrix(membership)
-    else hypot = cbind(hypot, toHypotMatrix(membership))
+    current_hypot = toHypotMatrix(membership)
+    if(is.null(hypot)) hypot = current_hypot
+    else hypot = cbind(hypot, current_hypot)
+    hypot = hypot[,!colSums(hypot) <= 1, drop = FALSE]
+    hypot <- hypot[, !duplicated(t(hypot))]
+    colnames(hypot) = NULL
+    #rownames(hypot) = rownames(x)
+    hypot_list[[i]] = hypot
   }
-  hypot = hypot[,!colSums(hypot) <= 1, drop = FALSE]
-  duplicated.columns <- duplicated(t(hypot))
-  hypot <- hypot[, !duplicated.columns]
-  hypot
+  llply(unique(hypot_list), as.matrix)
 }

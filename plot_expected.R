@@ -14,8 +14,13 @@ plot_expected = function(original_matrix, yamda_object){
 }
 data("toadCor")
 data("toadHypo")
-toadHypo[[5]] = hclustHypot(toadCor)
+full = hclustHypot(toadCor)
+class(toadHypo[[1]])
 names(toadHypo)[5] = "hclust"
-x = Yamda(toadCor, toadHypo, 25, F)
+x = Yamda(toadCor, full, 20, F)
+x = Yamda(toadCor, toadHypo, 25, T)
+all = do.call(cbind, toadHypo)
+x = Yamda(toadCor, list(all), 25, T)
+
 plot_expected(toadCor, x)
-#superheat(x$expected_matrices$hclust, row.dendrogram = T, col.dendrogram = T)
+superheat(x$expected_matrices[[19]], row.dendrogram = T, col.dendrogram = T)
