@@ -25,4 +25,4 @@ Suggests:
 VignetteBuilder: knitr
 LazyData: true
 BugReports: https://github.com/diogro/yamda-r/issues
-RoxygenNote: 6.0.0
+RoxygenNote: 6.0.1

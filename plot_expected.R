@@ -1,4 +1,6 @@
 library(cowplot)
+library(yamdar)
+library(superheat)
 plot_expected = function(original_matrix, yamda_object){
   expected_matrices = yamda_object$expected_matrices
   n_hypot = length(expected_matrices) - 1
@@ -10,5 +12,10 @@ plot_expected = function(original_matrix, yamda_object){
   }
   do.call(plot_grid, plots)
 }
+data("toadCor")
+data("toadHypo")
+toadHypo[[5]] = hclustHypot(toadCor)
+names(toadHypo)[5] = "hclust"
+x = Yamda(toadCor, toadHypo, 25, F)
 plot_expected(toadCor, x)
 #superheat(x$expected_matrices$hclust, row.dendrogram = T, col.dendrogram = T)
