@@ -8,15 +8,16 @@
 hclustHypot <- function(x, ...){
   cluster = hclust(dist(x), ...)
   hypot = NULL
-  hypot_list = vector("list", length(cluster$height))
-  for(i in seq_along(cluster$height)){
-    h = cluster$height[i]
+  n = length(cluster$height)
+  hypot_list = vector("list", n-1)
+  for(i in 1:(n-1)){
+    h = cluster$height[n-i]
     membership = cutree(cluster, h = h)
     current_hypot = toHypotMatrix(membership)
     if(is.null(hypot)) hypot = current_hypot
     else hypot = cbind(hypot, current_hypot)
     hypot = hypot[,!colSums(hypot) <= 1, drop = FALSE]
-    hypot <- hypot[, !duplicated(t(hypot))]
+    hypot <- hypot[,!duplicated(t(hypot))]
     colnames(hypot) = NULL
     #rownames(hypot) = rownames(x)
     hypot_list[[i]] = hypot

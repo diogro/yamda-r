@@ -17,10 +17,16 @@ data("toadHypo")
 full = hclustHypot(toadCor)
 class(toadHypo[[1]])
 names(toadHypo)[5] = "hclust"
-x = Yamda(toadCor, full, 20, F)
+x = Yamda(toadCor, full, 40, F)
+x[[1]]
 x = Yamda(toadCor, toadHypo, 25, T)
 all = do.call(cbind, toadHypo)
 x = Yamda(toadCor, list(all), 25, T)
 
 plot_expected(toadCor, x)
-superheat(x$expected_matrices[[19]], row.dendrogram = T, col.dendrogram = T)
+superheat(x$expected_matrices[[6]], row.dendrogram = T, col.dendrogram = T)
+superheat(toadCor, row.dendrogram = T, col.dendrogram = T)
+
+Yamda(toadCor, list(full[[4]]), 40)
+toMembership(full[[5]])
+full[[5]]
