@@ -23,6 +23,7 @@ Yamda = function(x, hypot_list, n, nneg = FALSE){
   stats = data.frame(hypothesis = character(), LL = numeric(), param = numeric(), AICc = numeric())
   expected_matrices = vector("list", n_models+1)
   module_correlations = vector("list", n_models+1)
+  ztrans_coef = vector("list", n_models+1)
   # Calculating for each actual hypothesis
   for(i in seq_along(hypot_list)){
     current_hypot = as.matrix(hypot_list[[i]])
@@ -30,15 +31,18 @@ Yamda = function(x, hypot_list, n, nneg = FALSE){
     if(is.null(colnames(current_hypot)))
       colnames(current_hypot) = paste("module", 1:n_modules, sep = "_")
     mod_pred = t(laply(CreateHypotMatrix(current_hypot), lt))[,1:n_modules]
-    m1 = penalized(lt(z.x), ~ mod_pred, ~1, lambda1 = 0, lambda2 = 0, positive = nneg)
-    module_correlations[[i]] = inv_ztrans(coef(m1,"all"))
-    names(module_correlations[[i]]) = c("background", colnames(current_hypot))
+    m1 = penalized(lt(z.x), ~ mod_pred, ~ 1, lambda1 = 0, lambda2 = 0, positive = nneg)
     expected = Reduce("+", Map("*", coef(m1,"all")[2:(n_modules+1)],
                                CreateHypotMatrix(current_hypot)[1:n_modules])) + coef(m1,"all")[1]
     expected = inv_ztrans(expected)
+    ztrans_coef[[i]] = coef(m1,"all")
+    module_correlations[[i]] = numeric(length(coef(m1,"all")))
+    module_correlations[[i]][1] <- inv_ztrans(coef(m1,"all")[1])
     for(k in 2:length(module_correlations[[i]])){
-      module_correlations[[i]][k] <- inv_ztrans(coef(m1,"all")[1]+coef(m1,"all")[k])-inv_ztrans(coef(m1,"all")[1])
+      module_correlations[[i]][k] <- inv_ztrans(coef(m1,"all")[1] + coef(m1,"all")[k]) - inv_ztrans(coef(m1,"all")[1])
     }
+    names(module_correlations[[i]]) = c("background", colnames(current_hypot))
+    names(ztrans_coef[[i]]) = c("background", colnames(current_hypot))
     diag(expected) = 1
     expected_matrices[[i]] = expected
     LogL = function(z_r, z_p) {-0.5 * log(var) - ((z_r - z_p)^2) / (2 * var)}
@@ -52,6 +56,8 @@ Yamda = function(x, hypot_list, n, nneg = FALSE){
   m1<-lm(lt(z.x)~1)
   module_correlations[[length(module_correlations)]] <- inv_ztrans(coef(m1))
   names(module_correlations[[length(module_correlations)]]) <- "background"
+  ztrans_coef[[length(ztrans_coef)]] <- coef(m1)
+  names(ztrans_coef[[length(ztrans_coef)]]) <- "background"
   expected = matrix(coef(m1)[1],nrow=dim(z.x)[1],ncol=dim(z.x)[2])
   expected = inv_ztrans(expected)
   diag(expected) = 1
@@ -66,9 +72,13 @@ Yamda = function(x, hypot_list, n, nneg = FALSE){
 
   names(expected_matrices) = c(names(hypot_list),"No Modularity")
   names(module_correlations) = c(names(hypot_list),"No Modularity")
+  names(ztrans_coef) = c(names(hypot_list),"No Modularity")
   stats$dAICc <- stats$AIC - min(stats$AICc)
+  stats$ModelLogL <- exp(-0.5 * stats$dAICc)
+  stats$AkaikeWeight <- stats$ModelLogL/sum(stats$ModelLogL)
   stats = stats[order(stats$dAICc),]
   return(list(stats = stats,
+              ztrans_coef = ztrans_coef[order(stats$AICc)],
               module_correlations = module_correlations[order(stats$AICc)],
               expected_matrices = expected_matrices[order(stats$AICc)]))
 }
