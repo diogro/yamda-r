@@ -1,0 +1,31 @@
+---
+title: "RoadMap"
+author: "Diogo Melo"
+date: "October 4, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Package organization
+
+- Separate parameter estimation from model comparison
+
+- Provide function of model comparison using both:
+
+    - Likelihood of correlations, as in Goswami 2016
+    - Likelihood of individuals, using a MVN distribution (include warnings for number of parameters)
+    
+- Caculate errors of module coeficients using bootstrap and/or Baysean matrix posterior samples
+
+- Separate module coeficients from hypothetical matrix output (print method?)
+
+- Print expected within module correlations? (probably no)
+
+- Add option for restricting only some modules to positive correlations (as oposed to all, or none, as is the case now)
+
+##Documentation
+
+- z-transform and correlation scale discussion (correlations can't be added)
