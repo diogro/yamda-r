@@ -9,14 +9,12 @@
 #' @param nneg If true, belonging to the same module can only increase correlations, not decrease them.
 #' @importFrom evolqg CreateHypotMatrix
 #' @importFrom plyr laply
-#' @importFrom penalized penalized coef
 #' @examples
 #' data(toadCor)
 #' data(toadHypo)
 #' Yamda(toadCor, toadHypo, 25, nneg = FALSE)
 #'
 YamdaLM = function(x, hypot_list, n, nneg = FALSE){
-  z.x = ztrans(x)
   n_models = length(hypot_list)
   if(is.null(names(hypot_list)))
     names(hypot_list) = paste("Hypothesis", 1:n_models, sep = "_")

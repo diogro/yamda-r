@@ -4,16 +4,16 @@
 \alias{Yamda}
 \title{Yet another modularity detection algorith in R}
 \usage{
-Yamda(x, hypot_list, n, nneg = FALSE)
+Yamda(cor_matrix, data, hypot_list, n, nneg = FALSE)
 }
 \arguments{
-\item{x}{correlation matrix}
-
 \item{hypot_list}{list of matrices describing modularity hypothesis. Each element in the list should be one matrix, and each column in these matrices represents a module, and each row a trait. If position [i,j] is one, the trait i belong to module j, and if it is zero, trait i does not belong to module j. Modules can be overlapping.}
 
 \item{n}{number of individuals used in the correlation matrix estimation}
 
 \item{nneg}{If true, belonging to the same module can only increase correlations, not decrease them.}
+
+\item{x}{correlation matrix}
 }
 \description{
 Uses hierarchical partitions and linear models to rank modularity hypothesis using correlation matrices.

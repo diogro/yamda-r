@@ -26,5 +26,5 @@ mod.cor = calcExpectedMatrix(modules, modules_ztrans)
 sds = runif(15, 1, 10)
 mod_cov = outer(sds, sds) * mod.cor
 pop = rmvnorm(50, sigma = mod_cov)
-YamdaMLE(pop, list(modules))
+YamdaMLE(pop, list(modules, modules[,-1]))
 }
