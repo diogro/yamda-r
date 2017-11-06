@@ -2,17 +2,16 @@ library(evolqg)
 library(corrgram)
 library(mvtnorm)
 library(penalized)
+library(bbmle)
+library(lucid)
 
 modules = matrix(c(rep(c(1, 0, 0), each = 5),
                    rep(c(0, 1, 0), each = 5),
                    rep(c(0, 0, 1), each = 5)), 15)
-cor.hypot = CreateHypotMatrix(modules)[[4]]
-hypot.mask = matrix(as.logical(cor.hypot), 15, 15)
-mod.cor = matrix(NA, 15, 15)
-mod.cor[ hypot.mask] = runif(length(mod.cor[ hypot.mask]), 0.8, 0.9) # within-modules
-mod.cor[!hypot.mask] = runif(length(mod.cor[!hypot.mask]), 0.3, 0.4) # between-modules
-diag(mod.cor) = 1
-mod.cor = (mod.cor + t(mod.cor))/2 # correlation matrices should be symmetric
+modules_ztrans = c(0.3, 0.5, 0.6, 1.7)
+mod.cor = calcExpectedMatrix(modules, modules_ztrans)
+
+# correlation matrices should be symmetric
 sds = runif(15, 1, 10)
 mod_cov = outer(sds, sds) * mod.cor
 
@@ -20,16 +19,35 @@ pop = rmvnorm(50, sigma = mod_cov)
 
 random_hypot = matrix(sample(c(0, 1), 3 * 15, replace = TRUE), 15, 3)
 
-x = pop
-hypot = modules
-pars = params
-modular_logL = function(x, hypot, pars){
-  x_sds = apply(x, 2, sd)
-  sum(dmvnorm(x, colMeans(x), sigma = outer(x_sds, pop_sds) * calcExpectedMatrix(hypot, pars), log = TRUE))
+# https://stackoverflow.com/questions/12982528/how-to-create-an-r-function-programmatically
+make_function <- function(args, body, env = parent.frame()) {
+  f <- function() {}
+  formals(f) <- args
+  body(f) <- body
+  environment(f) <- env
+  f
 }
-
-modular_logL(pop, modules, params)
-params = calcZTransCoef(modules, mod.cor, F)
-params = calcZTransCoef(hypot, mod.cor, F)
-params = numeric(ncol(hypot) + 1)
+make_alist <- function(args) {
+  res <- replicate(length(args), substitute())
+  names(res) <- args
+  res
+}
+calcZTransCoefML <- function (formula = NULL, data, hypot){
+  corr_matrix = cor(data)
+  initial_params = calcZTransCoef(hypot, corr_matrix, F)
+  mod_names = names(initial_params)[-1]
+  args = make_alist(c("x", "hypot", "background", mod_names))
+  body = quote({
+    x_sds = apply(x, 2, sd); 
+    pars = eval(parse(text = paste0("c(background, ", paste(mod_names, collapse = ", "), ")")))
+    -sum(dmvnorm(x, colMeans(x), sigma = outer(x_sds, x_sds) * calcExpectedMatrix(hypot, pars), log = TRUE))
+    })
+  f = make_function(args, body)
+  m1 = mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot))
+  m1
+}
+pop = rmvnorm(100, sigma = mod_cov)
+m1 = calcZTransCoefML(data = pop, hypot = NULL)
+calcZTransCoef(random_hypot, x = cor(pop), F)
+AIC(m1)
 
