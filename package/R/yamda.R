@@ -13,13 +13,15 @@
  #' @examples
  #' data(toadCor)
  #' data(toadHypo)
- #'
  #' Yamda(toadCor, toadHypo, 25, nneg = FALSE)
+ #' 
 Yamda = function(x, hypot_list, n, nneg = FALSE){
   z.x = ztrans(x)
   n_models = length(hypot_list)
   if(is.null(names(hypot_list)))
     names(hypot_list) = paste("Hypothesis", 1:n_models, sep = "_")
+  hypot_list[[n_models+1]] = matrix(0, ncol(x), 1)
+  names(hypot_list)[[n_models+1]] = "No Modularity"
   stats = data.frame(hypothesis = character(), LL = numeric(), param = numeric(), AICc = numeric())
   expected_matrices = vector("list", n_models+1)
   module_correlations = vector("list", n_models+1)
@@ -35,26 +37,9 @@ Yamda = function(x, hypot_list, n, nneg = FALSE){
     module_correlations[[i]] = calcModuleCorrelations(current_hypot, ztrans_coef[[i]])
     stats = rbind(stats, calcModelStats(x, expected_matrices[[i]], n, ztrans_coef[[i]], names(hypot_list)[[i]]))
   }
-
-  m1 <- lm(lt(z.x)~1)
-  module_correlations[[length(module_correlations)]] <- inv_ztrans(coef(m1))
-  names(module_correlations[[length(module_correlations)]]) <- "background"
-  ztrans_coef[[length(ztrans_coef)]] <- coef(m1)
-  names(ztrans_coef[[length(ztrans_coef)]]) <- "background"
-  expected = matrix(coef(m1)[1],nrow=dim(z.x)[1],ncol=dim(z.x)[2])
-  expected = inv_ztrans(expected)
-  diag(expected) = 1
-  expected_matrices[[length(expected_matrices)]] <- expected
-
-  LL = sum(LogL(lt(expected), lt(z.x), var = 1/(n - 3)))
-  n_corr = length(lt(z.x))
-  param = length(coef(m1))
-  AICc = - 2 * LL + 2 * param + (2 * param * (param + 1)) / (n_corr - param - 1)
-  stats = rbind(stats, data.frame(Hypothesis = "No Modularity", LL, param, AICc))
-
-  names(expected_matrices) = c(names(hypot_list),"No Modularity")
-  names(module_correlations) = c(names(hypot_list),"No Modularity")
-  names(ztrans_coef) = c(names(hypot_list),"No Modularity")
+  names(expected_matrices) = names(hypot_list)
+  names(module_correlations) = names(hypot_list)
+  names(ztrans_coef) = names(hypot_list)
   stats$dAICc <- stats$AIC - min(stats$AICc)
   stats$ModelLogL <- exp(-0.5 * stats$dAICc)
   stats$AkaikeWeight <- stats$ModelLogL/sum(stats$ModelLogL)
@@ -67,18 +52,31 @@ Yamda = function(x, hypot_list, n, nneg = FALSE){
 
 calcZTransCoef = function(current_hypot, x, nneg){
   z.x = ztrans(x)
-  n_modules = ncol(current_hypot)
-  mod_pred = t(laply(CreateHypotMatrix(current_hypot), lt))[,1:n_modules]
-  m1 = penalized(lt(z.x), ~ mod_pred, ~ 1, lambda1 = 0, lambda2 = 0, positive = nneg)
-  ztrans_coef = coef(m1,"all")
-  names(ztrans_coef) = c("background", colnames(current_hypot))
+  if(ncol(current_hypot) == 1 && all(current_hypot == 0)){
+    m1 = lm(lt(z.x) ~ 1)
+    ztrans_coef = coef(m1)
+    names(ztrans_coef) = c("background")
+  } else{
+    if(is.null(colnames(current_hypot)))
+      colnames(current_hypot) = paste("module", 1:ncol(current_hypot), sep = "_")
+    n_modules = ncol(current_hypot)
+    mod_pred = t(laply(CreateHypotMatrix(current_hypot), lt))[,1:n_modules]
+    m1 = penalized(lt(z.x), ~ mod_pred, ~ 1, lambda1 = 0, lambda2 = 0, positive = nneg)
+    ztrans_coef = coef(m1,"all")
+    names(ztrans_coef) = c("background", colnames(current_hypot))
+  }
   ztrans_coef
 }
 
 calcExpectedMatrix <- function(current_hypot, ztrans_coef) {
-  n_modules = ncol(current_hypot)
+  n_modules = length(ztrans_coef) - 1
+  if(n_modules > 0){
   expected = Reduce("+", Map("*", ztrans_coef[2:(n_modules+1)],
                              CreateHypotMatrix(current_hypot)[1:n_modules])) + ztrans_coef[1]
+
+  } else{
+    expected = matrix(ztrans_coef, nrow(current_hypot), nrow(current_hypot))
+  }
   expected = inv_ztrans(expected)
   diag(expected) = 1
   expected
@@ -87,10 +85,14 @@ calcExpectedMatrix <- function(current_hypot, ztrans_coef) {
 calcModuleCorrelations <- function(current_hypot, ztrans_coef) {
   module_correlations = numeric(length(ztrans_coef))
   module_correlations[1] <- inv_ztrans(ztrans_coef[1])
+  if(length(module_correlations) > 1){
   for(k in 2:length(module_correlations)){
     module_correlations[k] <- inv_ztrans(ztrans_coef[1] + ztrans_coef[k]) - inv_ztrans(ztrans_coef[1])
   }
   names(module_correlations) = c("background", colnames(current_hypot))
+  } else{
+    names(module_correlations) = c("background")
+  }
   module_correlations
 }
 
