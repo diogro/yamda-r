@@ -16,11 +16,13 @@ Imports:
     penalized,
     methods,
     stats,
+    bbmle,
     utils
 Suggests:
     testthat,
     knitr,
     rmarkdown,
+    mvtnorm,
     superheat
 VignetteBuilder: knitr
 LazyData: true

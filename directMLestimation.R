@@ -4,6 +4,7 @@ library(mvtnorm)
 library(penalized)
 library(bbmle)
 library(lucid)
+library(yamdar)
 
 modules = matrix(c(rep(c(1, 0, 0), each = 5),
                    rep(c(0, 1, 0), each = 5),
@@ -32,7 +33,7 @@ make_alist <- function(args) {
   names(res) <- args
   res
 }
-calcZTransCoefML <- function (formula = NULL, data, hypot){
+calcZTransCoefML <- function (data, hypot, formula = NULL){
   corr_matrix = cor(data)
   initial_params = calcZTransCoef(hypot, corr_matrix, F)
   mod_names = names(initial_params)[-1]
@@ -47,7 +48,7 @@ calcZTransCoefML <- function (formula = NULL, data, hypot){
   m1
 }
 pop = rmvnorm(100, sigma = mod_cov)
-m1 = calcZTransCoefML(data = pop, hypot = NULL)
-calcZTransCoef(random_hypot, x = cor(pop), F)
+m1 = calcZTransCoefML(data = pop, hypot = modules)
+calcZTransCoef(modules, x = cor(pop), F)
 AIC(m1)
 

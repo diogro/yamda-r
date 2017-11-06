@@ -15,7 +15,7 @@
 #' data(toadHypo)
 #' Yamda(toadCor, toadHypo, 25, nneg = FALSE)
 #'
-Yamda = function(x, hypot_list, n, nneg = FALSE){
+YamdaLM = function(x, hypot_list, n, nneg = FALSE){
   z.x = ztrans(x)
   n_models = length(hypot_list)
   if(is.null(names(hypot_list)))
