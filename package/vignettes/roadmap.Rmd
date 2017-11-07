@@ -10,22 +10,35 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Package organization
-
-- Separate parameter estimation from model comparison
-
-- Provide function of model comparison using both:
-
-    - Likelihood of correlations, as in Goswami 2016
-    - Likelihood of individuals, using a MVN distribution (include warnings for number of parameters)
     
+- Change intercept (background) to be just another module
+  
+- Allow non-negative coefficients in MLE estimation
+    
+- Add option for restricting only some modules to positive correlations (as oposed to all, or none, as is the case now)
+
+- Allow for inclusion or non-negative intercepts
+
 - Caculate errors of module coeficients using bootstrap and/or Baysean matrix posterior samples
+
+- Confidence intervals!? Maybe just for MLE...
 
 - Separate module coeficients from hypothetical matrix output (print method?)
 
 - Print expected within module correlations? (probably no)
 
-- Add option for restricting only some modules to positive correlations (as oposed to all, or none, as is the case now)
+##Options
+
+- Disallow using only correlation matrices and require residuals or linear models.
 
 ##Documentation
 
 - z-transform and correlation scale discussion (correlations can't be added)
+
+##Analysis
+
+- Investigate relation between background and integration (size variation)
+
+- Investigate size-free matrices (maybe simulated?!)
+
+- Investigate without intercept
