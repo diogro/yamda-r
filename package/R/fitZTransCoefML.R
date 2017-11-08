@@ -6,9 +6,9 @@
 #'@param hypot a single modularity hypothesis
 #'@export
 #' @importFrom bbmle logLik AICc mle2
-fitZTransCoefML <- function(data, hypot){
+fitZTransCoefML <- function(data, hypot, nneg){
   corr_matrix = cor(data)
-  initial_params = calcZTransCoef(hypot, corr_matrix, F)
+  initial_params = calcZTransCoef(hypot, corr_matrix, nneg)
   mod_names = names(initial_params)[-1]
   args = make_alist(c("x", "hypot", "background", mod_names))
   body = quote({
@@ -18,10 +18,21 @@ fitZTransCoefML <- function(data, hypot){
     } else {
       pars = eval(parse(text = "c(background)"))
     }
-    -sum(dmvnorm(x, colMeans(x), sigma = outer(x_sds, x_sds) * calcExpectedMatrix(hypot, pars), log = TRUE))
+    if(nneg){
+      nn_pars = pars
+      nn_pars[-1] = exp(nn_pars[-1])
+      -sum(dmvnorm(x, colMeans(x), sigma = outer(x_sds, x_sds) * calcExpectedMatrix(hypot, nn_pars), log = TRUE))
+    }
+    else
+      -sum(dmvnorm(x, colMeans(x), sigma = outer(x_sds, x_sds) * calcExpectedMatrix(hypot, pars), log = TRUE))
+
   })
   f = make_function(args, body)
-  mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot))
+  if(nneg){
+    mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot, nneg = nneg))
+  } else{
+    mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot, nneg = nneg))
+  }
 }
 
 # https://stackoverflow.com/questions/12982528/how-to-create-an-r-function-programmatically

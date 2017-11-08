@@ -4,7 +4,7 @@
 \alias{YamdaMLE}
 \title{Yet another modularity detection algorith in R}
 \usage{
-YamdaMLE(data, hypot_list, nneg = FALSE)
+YamdaMLE(data, hypot_list, nneg = TRUE)
 }
 \arguments{
 \item{data}{individual measurements or residuals}
@@ -21,10 +21,11 @@ library(mvtnorm)
 modules = matrix(c(rep(c(1, 0, 0), each = 5),
                    rep(c(0, 1, 0), each = 5),
                    rep(c(0, 0, 1), each = 5)), 15)
-modules_ztrans = c(0.3, 0.5, 0.6, 1.7)
+modules_ztrans = c(0.3, 0.5, .3, 1.7)
 mod.cor = calcExpectedMatrix(modules, modules_ztrans)
 sds = runif(15, 1, 10)
 mod_cov = outer(sds, sds) * mod.cor
 pop = rmvnorm(50, sigma = mod_cov)
-YamdaMLE(pop, list(modules, modules[,-1]))
+YamdaMLE(pop, list(modules, modules[,-1]), TRUE)[[2]]
+YamdaLM(cor(pop), list(modules, modules[,-1]), 50, TRUE)[[2]]
 }

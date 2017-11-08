@@ -4,7 +4,7 @@
 \alias{fitZTransCoefML}
 \title{Calculate the z-tranform of module correlations using individual values}
 \usage{
-fitZTransCoefML(data, hypot)
+fitZTransCoefML(data, hypot, nneg)
 }
 \arguments{
 \item{data}{individual measurements or residuals}

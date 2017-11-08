@@ -22,5 +22,4 @@ Uses hierarchical partitions and linear models to rank modularity hypothesis usi
 data(toadCor)
 data(toadHypo)
 Yamda(toadCor, toadHypo, 25, nneg = FALSE)
-
 }
