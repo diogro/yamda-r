@@ -17,7 +17,8 @@ Imports:
     methods,
     stats,
     bbmle,
-    utils
+    utils,
+    car
 Suggests:
     testthat,
     knitr,

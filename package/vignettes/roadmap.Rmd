@@ -39,6 +39,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 - Investigate relation between background and integration (size variation)
 
-- Investigate size-free matrices (maybe simulated?!)
+- Investigate size-free matrices (maybe simulated?!) (loooowwww priority)
 
 - Investigate without intercept
