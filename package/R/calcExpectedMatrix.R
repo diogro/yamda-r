@@ -19,16 +19,17 @@ calcExpectedMatrix <- function(hypot, ztrans_coef) {
   expected
 }
 
+#' @export
 calcExpectedMatrixFactors <- function(hypot, ztrans_coef) {
   n_modules = length(ztrans_coef) - 1
   p = nrow(hypot)
   if(n_modules > 0){
     expected = Reduce("+", Map("*",
                                ztrans_coef[2:(n_modules+1)],
-                               CreateHypotMatrix(hypot)[1:n_modules])) + diag(p)*ztrans_coef[1]
+                               CreateHypotMatrix(hypot)[1:n_modules])) + ztrans_coef[1] + diag(p)
 
   } else{
-    expected = matrix(ztrans_coef, nrow(hypot), nrow(hypot))
+    expected = matrix(ztrans_coef, p, p) + diag(p)
   }
   cov2cor(expected)
 }

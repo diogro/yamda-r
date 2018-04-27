@@ -6,7 +6,8 @@
 #' @param ... aditional arguments to hclust
 #' @importFrom plyr llply
 hclustHypot <- function(x, ...){
-  cluster = hclust(dist(x), ...)
+  dist_x = as.dist(sqrt(2*(1-x)^2))
+  cluster = hclust(dist_x, ...)
   hypot = NULL
   n = length(cluster$height)
   hypot_list = vector("list", n-1)

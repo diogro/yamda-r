@@ -21,12 +21,10 @@ fitFactorsML <- function(data, hypot, nneg){
     }
     if(nneg){
       nn_pars = pars
-      nn_pars[-1] = (logit(nn_pars[-1]) + 1)/2
+      nn_pars[-1] = exp(nn_pars[-1])
       -sum(dmvnorm(x, colMeans(x), sigma = outer(x_sds, x_sds) * calcExpectedMatrixFactors(hypot, nn_pars), log = TRUE))
     }
     else{
-      nn_pars = pars
-      nn_pars[-1] = logit(nn_pars[-1])
       -sum(dmvnorm(x, colMeans(x), sigma = outer(x_sds, x_sds) * calcExpectedMatrixFactors(hypot, pars), log = TRUE))
     }
 

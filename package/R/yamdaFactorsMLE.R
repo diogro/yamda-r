@@ -20,7 +20,17 @@
 #' mod_cov = outer(sds, sds) * mod.cor
 #' pop = rmvnorm(50, sigma = mod_cov)
 #' YamdaFactorsMLE(pop, list(modules, modules[,-1]), FALSE)[[2]]
-#' YamdaLM(cor(pop), list(modules, modules[,-1]), 50, TRUE)[[2]]
+#' YamdaLM(cor(pop), list(modules, modules[,-1]), 50, FALSE)[[2]]
+#'
+#' modules = matrix(c(rep(c(1, 0), c(10, 5)),
+#'                    rep(c(0, 1), c(5, 10))), 15)
+#' modules_ztrans = c(0.3, 0.5, 0.5)
+#' mod.cor = calcExpectedMatrixFactors(modules, modules_ztrans)
+#' sds = runif(15, 1, 3)
+#' mod_cov = outer(sds, sds) * mod.cor
+#' pop = rmvnorm(50, sigma = mod_cov)
+#' YamdaFactorsMLE(pop, list(modules, modules[,-1]), FALSE)[[1]]
+#' YamdaMLE(pop, list(modules, modules[,-1]), FALSE)[[1]]
 YamdaFactorsMLE = function(data, hypot_list, nneg = TRUE){
   n_models = length(hypot_list)
   if(is.null(names(hypot_list)))

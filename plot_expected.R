@@ -18,7 +18,7 @@ full = hclustHypot(toadCor)
 class(toadHypo[[1]])
 toadHypo[[5]] = full
 names(toadHypo)[5] = "hclust"
-x = Yamda(toadCor, full, 40, T)
+x = YamdaLM(toadCor, full,n = 40 , T)
 x[[1]]
 x = Yamda(toadCor, toadHypo, 25, T)
 all = do.call(cbind, toadHypo)
@@ -27,6 +27,7 @@ x = Yamda(toadCor, list(all), 25, T)
 toadHypo[[5]] = evolqg::LModularity(toadCor)[[2]]
 
 plot_expected(toadCor, x)
+x11()
 superheat(x$expected_matrices[[14]], row.dendrogram = T, col.dendrogram = T)
 superheat(toadCor, row.dendrogram = T, col.dendrogram = T)
 
