@@ -20,7 +20,7 @@ calcExpectedMatrix <- function(hypot, ztrans_coef) {
 }
 
 #' @export
-calcExpectedMatrixFactors <- function(hypot, ztrans_coef) {
+calcExpectedMatrixFactors <- function(hypot, ztrans_coef, c2c = TRUE) {
   n_modules = length(ztrans_coef) - 1
   p = nrow(hypot)
   if(n_modules > 0){
@@ -31,5 +31,6 @@ calcExpectedMatrixFactors <- function(hypot, ztrans_coef) {
   } else{
     expected = matrix(ztrans_coef, p, p) + diag(p)
   }
-  cov2cor(expected)
+  if(c2c) suppressWarnings({cov2cor(expected)})
+  else expected
 }

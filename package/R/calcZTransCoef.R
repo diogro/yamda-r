@@ -18,7 +18,9 @@ calcZTransCoef = function(hypot, x, nneg){
       colnames(hypot) = paste("module", 1:ncol(hypot), sep = "_")
     n_modules = ncol(hypot)
     mod_pred = t(laply(CreateHypotMatrix(hypot), lt))[,1:n_modules]
-    m1 = penalized(lt(z.x), ~ mod_pred, ~ 1, lambda1 = 0, lambda2 = 0, positive = nneg)
+    capture.output({
+      m1 = penalized(lt(z.x), ~ mod_pred, ~ 1, lambda1 = 0, lambda2 = 0, positive = nneg)
+    })
     ztrans_coef = coef(m1,"all")
     names(ztrans_coef) = c("background", colnames(hypot))
   }
