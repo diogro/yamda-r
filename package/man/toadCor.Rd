@@ -4,7 +4,9 @@
 \name{toadCor}
 \alias{toadCor}
 \title{Example correlation matrix for a toad skull}
-\format{Matrix}
+\format{
+Matrix
+}
 \usage{
 data(toadCor)
 }

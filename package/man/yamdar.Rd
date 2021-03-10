@@ -3,8 +3,4 @@
 \docType{package}
 \name{yamdar}
 \alias{yamdar}
-\alias{yamdar-package}
 \title{yamdar}
-\description{
-yamdar
-}

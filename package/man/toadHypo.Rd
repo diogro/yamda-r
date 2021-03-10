@@ -4,7 +4,9 @@
 \name{toadHypo}
 \alias{toadHypo}
 \title{Example modularity hypothesis for the toad skull}
-\format{Matrix}
+\format{
+Matrix
+}
 \usage{
 data(toadHypo)
 }
