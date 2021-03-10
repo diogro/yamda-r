@@ -1,6 +1,7 @@
 library(cowplot)
 library(yamdar)
 library(superheat)
+library(evolqg)
 plot_expected = function(original_matrix, yamda_object){
   expected_matrices = yamda_object$expected_matrices
   n_hypot = length(expected_matrices) - 1
@@ -60,4 +61,4 @@ n_corr = (15 * 15 - 15)/2
 LL  = c(sapply(result[[4]], function(x) sum(dmvnorm(pop, sigma = x, log = T))),
         sum(dmvnorm(pop, sigma = mod.cor, log = T)))
 param = c(result[[1]]$param, (15 * 15 - 15)/2 + 15)
-- 2 * LL + 2 * param + (2 * param * (param + 1)) / (100 - param - 1)
+-2 * LL[[1]] + 2 * param + (2 * param * (param + 1)) / (100 - param - 1)

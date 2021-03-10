@@ -1,4 +1,4 @@
-#' Yet another modularity detection algorith in R
+#' Yet another modularity detection algorithm in R
 #'
 #' Uses hierarchical partitions and MLE to rank modularity hypothesis using individual measurements.
 #'

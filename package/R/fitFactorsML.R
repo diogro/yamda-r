@@ -1,6 +1,6 @@
-#' Calculate the z-tranform of module correlations using individual values
+#' Calculate the z-transform of module correlations using individual values
 #'
-#' Calculates the z-tranform for a given population and modularity hypothesis
+#' Calculates the z-transform for a given population and modularity hypothesis
 #'
 #'@param data individual measurements or residuals
 #'@param hypot a single modularity hypothesis
