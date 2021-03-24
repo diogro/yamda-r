@@ -2,24 +2,27 @@ library(cowplot)
 library(yamdar)
 library(superheat)
 library(evolqg)
-plot_expected = function(original_matrix, yamda_object){
+plot_expected = function(original_matrix, yamda_object, n = 3, 
+                         nrow = NULL, ncol = NULL, ...){
   expected_matrices = yamda_object$expected_matrices
   n_hypot = length(expected_matrices) - 1
-  if(is.null(names(expected_matrices))) names(expected_matrices) = 1:n_hypot
-  plots = vector("list", n_hypot + 1)
-  plots[[1]] = superheat(original_matrix, print.plot = FALSE)[[2]]
-  for(i in 1:n_hypot){
-    plots[[i+1]] = superheat(expected_matrices[[i]], print.plot = FALSE)[[2]]
+  expected_matrices = expected_matrices[yamda_object$stats$Hypothesis]
+  plots = vector("list", n + 1)
+  plots[[1]] = superheat(original_matrix, print.plot = FALSE, title = "Observed", ...)[[2]]
+  for(i in 1:n){
+    plots[[i+1]] = superheat(expected_matrices[[i]], print.plot = FALSE, 
+                             title =  names(expected_matrices)[i] ,...)[[2]]
   }
-  do.call(plot_grid, plots)
+  plot_grid(plotlist = plots, nrow = nrow, ncol = ncol)
 }
+
 data("toadCor")
 data("toadHypo")
 full = hclustHypot(toadCor)
 class(toadHypo[[1]])
 toadHypo[[5]] = full
 names(toadHypo)[5] = "hclust"
-x = YamdaLM(toadCor, full,n = 40 , T)
+x = YamdaFactorsMLE(toadCor, full, T)
 x[[1]]
 x = Yamda(toadCor, toadHypo, 25, T)
 all = do.call(cbind, toadHypo)
@@ -62,3 +65,5 @@ LL  = c(sapply(result[[4]], function(x) sum(dmvnorm(pop, sigma = x, log = T))),
         sum(dmvnorm(pop, sigma = mod.cor, log = T)))
 param = c(result[[1]]$param, (15 * 15 - 15)/2 + 15)
 -2 * LL[[1]] + 2 * param + (2 * param * (param + 1)) / (100 - param - 1)
+
+

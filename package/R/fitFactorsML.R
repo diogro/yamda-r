@@ -7,6 +7,7 @@
 #'@export
 #'@importFrom bbmle logLik AICc mle2
 #'@importFrom car logit
+#'@importFrom mvtnorm dmvnorm	
 fitFactorsML <- function(data, hypot, nneg){
   corr_matrix = cor(data)
   initial_params = calcZTransCoef(hypot, corr_matrix, nneg)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/fitFactorsML.R
 \name{fitFactorsML}
 \alias{fitFactorsML}
-\title{Calculate the z-tranform of module correlations using individual values}
+\title{Calculate the z-transform of module correlations using individual values}
 \usage{
 fitFactorsML(data, hypot, nneg)
 }
@@ -12,5 +12,5 @@ fitFactorsML(data, hypot, nneg)
 \item{hypot}{a single modularity hypothesis}
 }
 \description{
-Calculates the z-tranform for a given population and modularity hypothesis
+Calculates the z-transform for a given population and modularity hypothesis
 }
