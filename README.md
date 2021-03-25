@@ -6,5 +6,5 @@ Yet Another Modularity Detection Algorithm in R
 ```r
 install.packages("devtools")
 devtools::install_github("diogro/yamda-r", subdir = "package")
-library(yamda-r)
+library(yamdar)
 ```

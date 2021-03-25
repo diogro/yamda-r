@@ -1,4 +1,4 @@
-#' Yet another modularity detection algorithm in R
+#' Yet another modularity detection algorithm 
 #'
 #' Uses hierarchical partitions and MLE to rank modularity hypothesis using individual measurements.
 #'
@@ -8,7 +8,6 @@
 #' @param factors Use factors?
 #' @param nneg If true, belonging to the same module can only increase correlations, not decrease them.
 #' @importFrom plyr laply
-#' @importFrom bbmle logLik AICc
 #' @examples
 #' library(mvtnorm)
 #' modules = matrix(c(rep(c(1, 0, 0), each = 5),

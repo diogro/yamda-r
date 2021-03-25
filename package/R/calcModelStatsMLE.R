@@ -1,3 +1,4 @@
+#' @importFrom bbmle logLik AICc
 calcModelStatsMLE <- function(m1, current_hypot_name) {
   LL = as.numeric(logLik(m1))
   param = length(coef(m1))

@@ -2,7 +2,7 @@
 % Please edit documentation in R/yamda.R
 \name{Yamda}
 \alias{Yamda}
-\title{Yet another modularity detection algorithm in R}
+\title{Yet another modularity detection algorithm}
 \usage{
 Yamda(data, hypot_list, factors = TRUE, nneg = FALSE)
 }
