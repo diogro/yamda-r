@@ -11,7 +11,7 @@ YamdaMLE(data, hypot_list, nneg = TRUE)
 
 \item{hypot_list}{list of matrices describing modularity hypothesis. Each element in the list should be one matrix, and each column in these matrices represents a module, and each row a trait. If position [i,j] is one, the trait i belong to module j, and if it is zero, trait i does not belong to module j. Modules can be overlapping.}
 
-\item{nneg}{NOT IMPLEMENTED. If true, belonging to the same module can only increase correlations, not decrease them.}
+\item{nneg}{If true, belonging to the same module can only increase correlations, not decrease them.}
 }
 \description{
 Uses hierarchical partitions and MLE to rank modularity hypothesis using individual measurements.
@@ -27,5 +27,4 @@ sds = runif(15, 1, 10)
 mod_cov = outer(sds, sds) * mod.cor
 pop = rmvnorm(50, sigma = mod_cov)
 YamdaMLE(pop, list(modules, modules[,-1]), TRUE)[[2]]
-YamdaLM(cor(pop), list(modules, modules[,-1]), 50, TRUE)[[2]]
 }

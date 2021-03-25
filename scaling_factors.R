@@ -3,8 +3,8 @@ library(mvtnorm)
 
 true_factors = matrix(c(rep(c(1, 0), c(10, 5)),
                         rep(c(0, 1), c(5, 10))), 15)
-modules_ztrans = c(0.3, 0.5, 0.5)
-mod.cor = calcExpectedMatrixFactors(true_factors, modules_ztrans)
+modules_coef = c(0.3, 0.5, 0.5)
+mod.cor = calcExpectedMatrixFactors(true_factors, modules_coef)
 sds = runif(15, 1, 3)
 mod_cov = outer(sds, sds) * mod.cor
 
@@ -17,7 +17,7 @@ pop = rmvnorm(100, sigma = mod_cov)
 hypot = list(tudo = modules, sem_zuera = modules[,-5], true = modules[,-c(3, 4, 5)])
 YamdaFactorsMLE(pop, hypot, TRUE)[1:2]
 YamdaFactorsMLE(pop, hypot, FALSE)[1:2]
-y_mle = YamdaMLE(pop, hypot, FALSE)[1:2]
+y_mle = YamdaMLE(pop, hypot, FALSE)
 
 true_factors = matrix(c(rep(c(1, 0), c(4, 2)),
                         rep(c(0, 1), c(2, 4))), 6)
@@ -32,13 +32,4 @@ modules = matrix(c(rep(c(1, 0), c(4, 2)),
                    rep(c(0, 0, 1), each = 2)), 6)
 pop = rmvnorm(100, sigma = mod_cov)
 hypot = list(tudo = modules, true = modules[,-c(3, 4)])
-
-library(microbenchmark)
-microbenchmark(
-(y_fact = YamdaFactorsMLE(pop, hypot, FALSE)[[1]])
-,
-(y_fact_scaled = YamdaFactorsMLE(scale(pop), hypot, FALSE)[[1]]),
-times = 2
-)
-y_mle = YamdaMLE(pop, hypot, FALSE)
 

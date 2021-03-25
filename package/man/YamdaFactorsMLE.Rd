@@ -11,7 +11,7 @@ YamdaFactorsMLE(data, hypot_list, nneg = TRUE)
 
 \item{hypot_list}{list of matrices describing modularity hypothesis. Each element in the list should be one matrix, and each column in these matrices represents a module, and each row a trait. If position [i,j] is one, the trait i belong to module j, and if it is zero, trait i does not belong to module j. Modules can be overlapping.}
 
-\item{nneg}{NOT IMPLEMENTED. If true, belonging to the same module can only increase correlations, not decrease them.}
+\item{nneg}{If true, belonging to the same module can only increase correlations, not decrease them.}
 }
 \description{
 Uses hierarchical partitions and MLE to rank modularity hypothesis using individual measurements.
@@ -21,18 +21,17 @@ library(mvtnorm)
 modules = matrix(c(rep(c(1, 0, 0), each = 5),
                    rep(c(0, 1, 0), each = 5),
                    rep(c(0, 0, 1), each = 5)), 15)
-modules_ztrans = c(0.3, 0.5, .3, 1.7)
-mod.cor = calcExpectedMatrix(modules, modules_ztrans)
+modules_z_coef = c(0.3, 0.5, .3, 1.7)
+mod.cor = calcExpectedMatrix(modules, modules_z_coef)
 sds = runif(15, 1, 10)
 mod_cov = outer(sds, sds) * mod.cor
 pop = rmvnorm(50, sigma = mod_cov)
 YamdaFactorsMLE(pop, list(modules, modules[,-1]), FALSE)[[2]]
-YamdaLM(cor(pop), list(modules, modules[,-1]), 50, FALSE)[[2]]
 
 true_factors = matrix(c(rep(c(1, 0), c(10, 5)),
                       rep(c(0, 1), c(5, 10))), 15)
-modules_ztrans = c(0.3, 0.5, 0.5)
-mod.cor = calcExpectedMatrixFactors(true_factors, modules_ztrans)
+modules_coef = c(0.3, 0.5, 0.5)
+mod.cor = calcExpectedMatrixFactors(true_factors, modules_coef)
 sds = runif(15, 1, 3)
 mod_cov = outer(sds, sds) * mod.cor
 

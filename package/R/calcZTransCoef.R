@@ -8,6 +8,7 @@
 #' @export
 #' @importFrom evolqg CreateHypotMatrix
 #' @importFrom penalized penalized coef
+#' @importFrom utils capture.output
 calcZTransCoef = function(hypot, x, nneg){
   z.x = ztrans(x)
   if(ncol(hypot) == 1 && all(hypot == 0)){

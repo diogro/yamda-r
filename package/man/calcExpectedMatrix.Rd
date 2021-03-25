@@ -9,8 +9,10 @@ calcExpectedMatrix(hypot, ztrans_coef)
 \arguments{
 \item{hypot}{a single modularity hypothesis}
 
-\item{ztrans_coef}{a vector of z-transformed correlations for each module, starting with a background correlation}
+\item{ztrans_coef}{a vector of z-transformed correlations for each module, 
+starting with a background correlation}
 }
 \description{
-Calculates the expectec correlations matrix for a given modularity hypothesis using background and within-modules z-transformed correlations
+Calculates the expected correlation matrix for a given modularity hypothesis 
+using background and within-modules z-transformed correlations
 }

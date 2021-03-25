@@ -5,6 +5,7 @@
 #' @param x correlation matrix
 #' @param ... aditional arguments to hclust
 #' @importFrom plyr llply
+#' @importFrom stats as.dist
 hclustHypot <- function(x, ...){
   dist_x = as.dist(sqrt(2*(1-x)^2))
   cluster = hclust(dist_x, ...)

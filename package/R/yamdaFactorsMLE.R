@@ -13,8 +13,8 @@
 #' modules = matrix(c(rep(c(1, 0, 0), each = 5),
 #'                    rep(c(0, 1, 0), each = 5),
 #'                    rep(c(0, 0, 1), each = 5)), 15)
-#' modules_coef = c(0.3, 0.5, .3, 1.7)
-#' mod.cor = calcExpectedMatrix(modules, modules_coef)
+#' modules_z_coef = c(0.3, 0.5, .3, 1.7)
+#' mod.cor = calcExpectedMatrix(modules, modules_z_coef)
 #' sds = runif(15, 1, 10)
 #' mod_cov = outer(sds, sds) * mod.cor
 #' pop = rmvnorm(50, sigma = mod_cov)
@@ -62,7 +62,7 @@ YamdaFactorsMLE = function(data, hypot_list, nneg = TRUE){
     n_modules = ncol(current_hypot)
     if(is.null(colnames(current_hypot)))
       colnames(current_hypot) = paste("module", 1:n_modules, sep = "_")
-    models[[i]] = fitFactorsML(data, current_hypot, nneg)
+    models[[i]] = fitModuleCoef(data, current_hypot, nneg, factors = TRUE)
     if(nneg)
       coef[[i]] = c(coef(models[[i]])[1], exp(coef(models[[i]])[-1]))
     else
@@ -81,6 +81,7 @@ YamdaFactorsMLE = function(data, hypot_list, nneg = TRUE){
   stats$ModelLogL <- exp(-0.5 * stats$dAICc)
   stats$AkaikeWeight <- stats$ModelLogL/sum(stats$ModelLogL)
   stats = stats[order(stats$dAICc),]
+  
   return(list(stats = stats,
               coef = coef[order(stats$AICc)],
               #module_correlations = module_correlations[order(stats$AICc)],

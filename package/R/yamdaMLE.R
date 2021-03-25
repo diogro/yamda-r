@@ -22,22 +22,31 @@
 #' YamdaMLE(pop, list(modules, modules[,-1]), TRUE)[[2]]
 YamdaMLE = function(data, hypot_list, nneg = TRUE){
   n_models = length(hypot_list)
+  
   if(is.null(names(hypot_list)))
     names(hypot_list) = paste("Hypothesis", 1:n_models, sep = "_")
+  
   hypot_list[[n_models+1]] = matrix(0, ncol(data), 1)
+  
   names(hypot_list)[[n_models+1]] = "No Modularity"
-  stats = data.frame(hypothesis = character(), LL = numeric(), param = numeric(), AICc = numeric())
+  
+  stats = data.frame(hypothesis = character(), 
+                     LL = numeric(), 
+                     param = numeric(), 
+                     AICc = numeric())
+  
   models = vector("list", n_models+1)
   expected_matrices = vector("list", n_models+1)
   module_correlations = vector("list", n_models+1)
   ztrans_coef = vector("list", n_models+1)
+  
   # Calculating for each actual hypothesis
   for(i in seq_along(hypot_list)){
     current_hypot = as.matrix(hypot_list[[i]])
     n_modules = ncol(current_hypot)
     if(is.null(colnames(current_hypot)))
       colnames(current_hypot) = paste("module", 1:n_modules, sep = "_")
-    models[[i]] = fitZTransCoefML(data, current_hypot, nneg)
+    models[[i]] = fitModuleCoef(data, current_hypot, nneg, factors = FALSE)
     if(nneg)
       ztrans_coef[[i]] = c(coef(models[[i]])[1], exp(coef(models[[i]])[-1]))
     else
@@ -46,14 +55,17 @@ YamdaMLE = function(data, hypot_list, nneg = TRUE){
     module_correlations[[i]] = calcModuleCorrelations(current_hypot, ztrans_coef[[i]])
     stats = rbind(stats, calcModelStatsMLE(models[[i]], names(hypot_list)[[i]]))
   }
+  
   names(expected_matrices) = names(hypot_list)
   names(module_correlations) = names(hypot_list)
   names(ztrans_coef) = names(hypot_list)
   names(models) = names(hypot_list)
+  
   stats$dAICc <- stats$AIC - min(stats$AICc)
   stats$ModelLogL <- exp(-0.5 * stats$dAICc)
   stats$AkaikeWeight <- stats$ModelLogL/sum(stats$ModelLogL)
   stats = stats[order(stats$dAICc),]
+  
   return(list(stats = stats,
               ztrans_coef = ztrans_coef[order(stats$AICc)],
               module_correlations = module_correlations[order(stats$AICc)],

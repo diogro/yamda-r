@@ -18,12 +18,12 @@ Imports:
     stats,
     bbmle,
     utils,
+    mvtnorm,
     car
 Suggests:
     testthat,
     knitr,
     rmarkdown,
-    mvtnorm,
     superheat
 VignetteBuilder: knitr
 LazyData: true
