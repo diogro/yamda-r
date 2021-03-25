@@ -35,5 +35,10 @@ modules_2 = matrix(c(rep(c(1, 0, 0), each = 5),
 modules_1 = matrix(c(rep(c(1, 0, 0), each = 5)),    15)
 hypot = list(modules, modules_1, modules_2)
 result = Yamda(pop, hypot, factors = FALSE)
+result_factors = Yamda(pop, hypot, factors = TRUE)
+
+## Não sei muito como pensar nesse efeito que o modelo de fatores tem nas 
+## correlações entre modulos.
 
 plot_expected(original_matrix = mod.cor, yamda_object = result, n = 3)
+plot_expected(original_matrix = mod.cor, yamda_object = result_factors, n = 3)
