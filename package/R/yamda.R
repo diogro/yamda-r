@@ -38,6 +38,8 @@
 #' Yamda(pop, hypot, factors = TRUE, FALSE)[[1]]
 #' Yamda(pop, hypot, factors = FALSE, FALSE)[[1]]
 Yamda = function(data, hypot_list, factors = TRUE, nneg = FALSE){
+  if(isSymmetric(data)) stop("data argument should be raw data or residuals, not a correlation matrix.")
+  
   n_models = length(hypot_list)
   
   if(is.null(names(hypot_list)))
@@ -73,7 +75,10 @@ Yamda = function(data, hypot_list, factors = TRUE, nneg = FALSE){
     else
       coef[[i]] = coef(models[[i]])
     
-    expected_matrices[[i]] = calcExpectedMatrixFactors(current_hypot, coef[[i]])
+    if(factors)
+      expected_matrices[[i]] = calcExpectedMatrixFactors(current_hypot, coef[[i]])
+    else
+      expected_matrices[[i]] = calcExpectedMatrix(current_hypot, coef[[i]])
     
     if(!factors)
       module_correlations[[i]] = calcModuleCorrelations(current_hypot, coef[[i]])
