@@ -5,6 +5,7 @@
 #' @export
 #' @param data individual measurements or residuals
 #' @param hypot_list list of matrices describing modularity hypothesis. Each element in the list should be one matrix, and each column in these matrices represents a module, and each row a trait. If position [i,j] is one, the trait i belong to module j, and if it is zero, trait i does not belong to module j. Modules can be overlapping.
+#' @param factors Use factors?
 #' @param nneg If true, belonging to the same module can only increase correlations, not decrease them.
 #' @importFrom plyr laply
 #' @importFrom bbmle logLik AICc
@@ -18,7 +19,7 @@
 #' sds = runif(15, 1, 10)
 #' mod_cov = outer(sds, sds) * mod.cor
 #' pop = rmvnorm(50, sigma = mod_cov)
-#' YamdaFactorsMLE(pop, list(modules, modules[,-1]), FALSE)[[2]]
+#' Yamda(pop, list(modules, modules[,-1]), TRUE, FALSE)[[2]]
 #'
 #' true_factors = matrix(c(rep(c(1, 0), c(10, 5)),
 #'                       rep(c(0, 1), c(5, 10))), 15)
@@ -34,9 +35,9 @@
 #'                    sample(c(0, 1), 15, replace = T)), 15)
 #' pop = rmvnorm(100, sigma = mod_cov)
 #' hypot = list(tudo = modules, sem_zuera = modules[,-5], true = modules[,-c(3, 4, 5)])
-#' YamdaFactorsMLE(pop, hypot, FALSE)[[1]]
-#' YamdaMLE(pop, hypot, FALSE)[[1]]
-YamdaFactorsMLE = function(data, hypot_list, nneg = TRUE){
+#' Yamda(pop, hypot, factors = TRUE, FALSE)[[1]]
+#' Yamda(pop, hypot, factors = FALSE, FALSE)[[1]]
+Yamda = function(data, hypot_list, factors = TRUE, nneg = FALSE){
   n_models = length(hypot_list)
   
   if(is.null(names(hypot_list)))
@@ -58,17 +59,25 @@ YamdaFactorsMLE = function(data, hypot_list, nneg = TRUE){
   
   # Calculating for each actual hypothesis
   for(i in seq_along(hypot_list)){
+    
     current_hypot = as.matrix(hypot_list[[i]])
     n_modules = ncol(current_hypot)
+    
     if(is.null(colnames(current_hypot)))
       colnames(current_hypot) = paste("module", 1:n_modules, sep = "_")
-    models[[i]] = fitModuleCoef(data, current_hypot, nneg, factors = TRUE)
+    
+    models[[i]] = fitModuleCoef(data, current_hypot, nneg, factors = factors)
+    
     if(nneg)
       coef[[i]] = c(coef(models[[i]])[1], exp(coef(models[[i]])[-1]))
     else
       coef[[i]] = coef(models[[i]])
+    
     expected_matrices[[i]] = calcExpectedMatrixFactors(current_hypot, coef[[i]])
-    #module_correlations[[i]] = calcModuleCorrelations(current_hypot, coef[[i]])
+    
+    if(!factors)
+      module_correlations[[i]] = calcModuleCorrelations(current_hypot, coef[[i]])
+    
     stats = rbind(stats, calcModelStatsMLE(models[[i]], names(hypot_list)[[i]]))
   }
   
@@ -82,9 +91,16 @@ YamdaFactorsMLE = function(data, hypot_list, nneg = TRUE){
   stats$AkaikeWeight <- stats$ModelLogL/sum(stats$ModelLogL)
   stats = stats[order(stats$dAICc),]
   
+  if(factors){
+    module_correlations = NULL
+    
+  } else{
+    module_correlations = module_correlations[order(stats$AICc)]
+  }
+  
   return(list(stats = stats,
               coef = coef[order(stats$AICc)],
-              #module_correlations = module_correlations[order(stats$AICc)],
+              module_correlations = module_correlations,
               expected_matrices = expected_matrices[order(stats$AICc)],
               models = models[order(stats$AICc)]))
 }
