@@ -5,7 +5,7 @@
 #' @export
 #' @param data individual measurements or residuals
 #' @param hypot_list list of matrices describing modularity hypothesis. Each element in the list should be one matrix, and each column in these matrices represents a module, and each row a trait. If position [i,j] is one, the trait i belong to module j, and if it is zero, trait i does not belong to module j. Modules can be overlapping.
-#' @param nneg NOT IMPLEMENTED. If true, belonging to the same module can only increase correlations, not decrease them.
+#' @param nneg If true, belonging to the same module can only increase correlations, not decrease them.
 #' @importFrom plyr laply
 #' @importFrom penalized penalized coef
 #' @importFrom bbmle logLik AICc
@@ -20,7 +20,6 @@
 #' mod_cov = outer(sds, sds) * mod.cor
 #' pop = rmvnorm(50, sigma = mod_cov)
 #' YamdaMLE(pop, list(modules, modules[,-1]), TRUE)[[2]]
-#' YamdaLM(cor(pop), list(modules, modules[,-1]), 50, TRUE)[[2]]
 YamdaMLE = function(data, hypot_list, nneg = TRUE){
   n_models = length(hypot_list)
   if(is.null(names(hypot_list)))
@@ -60,11 +59,4 @@ YamdaMLE = function(data, hypot_list, nneg = TRUE){
               module_correlations = module_correlations[order(stats$AICc)],
               expected_matrices = expected_matrices[order(stats$AICc)],
               models = models[order(stats$AICc)]))
-  }
-
-calcModelStatsMLE <- function(m1, current_hypot_name) {
-  LL = as.numeric(logLik(m1))
-  param = length(coef(m1))
-  AICc = AICc(m1)
-  data.frame(Hypothesis = current_hypot_name, LL, param, AICc)
 }

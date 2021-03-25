@@ -4,6 +4,7 @@
 #'
 #'@param data individual measurements or residuals
 #'@param hypot a single modularity hypothesis
+#'@param nneg Logical. If TRUE, coeficients are non-negative?
 #'@export
 #'@importFrom bbmle logLik AICc mle2
 #'@importFrom car logit
@@ -31,23 +32,5 @@ fitFactorsML <- function(data, hypot, nneg){
 
   })
   f = make_function(args, body)
-  if(nneg){
-    mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot, nneg = nneg))
-  } else{
-    mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot, nneg = nneg))
-  }
-}
-
-# https://stackoverflow.com/questions/12982528/how-to-create-an-r-function-programmatically
-make_function <- function(args, body, env = parent.frame()) {
-  f <- function() {}
-  formals(f) <- args
-  body(f) <- body
-  environment(f) <- env
-  f
-}
-make_alist <- function(args) {
-  res <- replicate(length(args), substitute())
-  names(res) <- args
-  res
+  mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot, nneg = nneg))
 }

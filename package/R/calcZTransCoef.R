@@ -7,6 +7,7 @@
 #' @param nneg logical. If TRUE, module coeficients can only be positive
 #' @export
 #' @importFrom evolqg CreateHypotMatrix
+#' @importFrom penalized penalized coef
 calcZTransCoef = function(hypot, x, nneg){
   z.x = ztrans(x)
   if(ncol(hypot) == 1 && all(hypot == 0)){
@@ -32,7 +33,9 @@ calcModuleCorrelations <- function(hypot, ztrans_coef) {
   module_correlations[1] <- inv_ztrans(ztrans_coef[1])
   if(length(module_correlations) > 1){
     for(k in 2:length(module_correlations)){
-      module_correlations[k] <- inv_ztrans(ztrans_coef[1] + ztrans_coef[k]) - inv_ztrans(ztrans_coef[1])
+      module_correlations[k] <- inv_ztrans(ztrans_coef[1] + 
+                                           ztrans_coef[k]) - 
+                                inv_ztrans(ztrans_coef[1])
     }
     names(module_correlations) = c("background", colnames(hypot))
   } else{
