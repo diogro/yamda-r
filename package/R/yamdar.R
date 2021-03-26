@@ -1,5 +1,7 @@
 #' yamdar
 #'
+#' One of these days we are going to find some good modules!
+#'
 #' @name yamdar
 #' @docType package
 #' @importFrom methods is
