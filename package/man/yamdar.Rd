@@ -4,3 +4,6 @@
 \name{yamdar}
 \alias{yamdar}
 \title{yamdar}
+\description{
+One of these days we are going to find some good modules!
+}

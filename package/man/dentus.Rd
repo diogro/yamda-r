@@ -3,7 +3,7 @@
 \docType{data}
 \name{dentus}
 \alias{dentus}
-\title{Example multivariate data stesi}
+\title{Example multivariate data set}
 \format{
 A data frame with 300 rows and 5 variables
 }

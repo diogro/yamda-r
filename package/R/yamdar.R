@@ -9,7 +9,7 @@
 #' @importFrom utils write.csv write.table
 NULL
 
-#' Example multivariate data stesi
+#' Example multivariate data set
 #'
 #' Simulated example of 4 continuous bone lengths from 5 species.
 #'
