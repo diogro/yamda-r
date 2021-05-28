@@ -24,3 +24,4 @@ vignettes/*.pdf
 *.knit.md
 .Rproj.user
 yamda-r.Rproj
+manuscript/__latexindent_temp.tex
