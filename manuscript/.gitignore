@@ -1,0 +1,17 @@
+*.aux
+*.bbl
+*.toc 
+*.out 
+*.log 
+*.nls 
+*.nlo 
+*.lof 
+*.lot 
+*.blg 
+*.ilg 
+*.run.xml
+*.bcf 
+*.fls 
+*.out
+.vscode
+main.fdb_latexmk

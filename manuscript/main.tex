@@ -1,0 +1,86 @@
+\documentclass[12pt,halfline,a4paper]{ouparticle}
+
+\usepackage{graphicx}
+\usepackage{libertine}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{breakcites}
+\usepackage{microtype}
+\usepackage{rotating}
+
+\usepackage[round]{natbib}
+
+\usepackage{adjustbox}
+\usepackage{booktabs,multirow,array}
+\usepackage{amssymb, amsmath}
+\usepackage{xfrac}
+\usepackage{longtable}
+\usepackage[toc,page]{appendix}
+
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!30!black},
+    urlcolor={blue!30!black}
+}
+\usepackage{lineno}
+\linenumbers
+
+\begin{document}
+
+\title{YAMDA: A maximum likelihood hierarchical modularity detection algorithm}
+
+\author{%
+\name{Diogo Melo \thanks{Corresponding authors.}}
+\address{Lewis-Sigler Institute for Integrative Genomics - Princeton University}
+\email{diogro@gmail.com}
+\and
+\name{Fabio Machado \textup{*}}
+\address{Virginia Polytechnic Institute and State University, VT - Department of Biological Sciences}
+\email{macfabio@gmail.com}
+%\and
+%\name{Gabriel Marroig}
+%\address{Departamento de genética e biologia evolutiva, Instituto de Biociências, Universidade de São Paulo, São Paulo, SP, Brasil}
+%\email{gmarroig@usp.br}
+}
+
+\abstract{\textbf{
+Multivariate quantitative
+genetics provides a powerful framework for understanding patterns and
+processes of phenotypic evolution. Quantitative genetics parameters,
+like trait heritability or the G-matrix for sets of traits, can be used
+to predict evolutionary response or to understand the evolutionary
+history of a population.}}
+
+\date{\today}
+
+\keywords{G-matrix; modularity; phenotypic correlation; factor analysis}
+
+\maketitle
+
+\input{text}
+
+\bibliography{refs}
+
+\bibliographystyle{apalike}
+
+\newpage
+
+\appendix* \section*{Supporting Information}
+
+\makeatletter
+\renewcommand{\thefigure}{S\arabic{figure}}
+\makeatother
+
+\setcounter{figure}{0}
+
+\begin{figure}
+	\includegraphics[width=10cm]{example-image-b}
+`	\caption[This result in necessary but not cool.]{}
+\label{fig:supporting_1}
+\end{figure}
+
+
+\end{document}
