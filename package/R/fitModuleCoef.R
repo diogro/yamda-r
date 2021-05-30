@@ -41,5 +41,5 @@ fitModuleCoef <- function(data, hypot, nneg, factors){
     }
   })
   f = make_function(args, body)
-  mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot, nneg = nneg))
+  mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot, nneg = nneg), method = "Nelder-Mead")
 }
