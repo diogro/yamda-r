@@ -41,5 +41,9 @@ fitModuleCoef <- function(data, hypot, nneg, factors){
     }
   })
   f = make_function(args, body)
-  mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot, nneg = nneg), method = "Nelder-Mead")
+  tryCatch({mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot, nneg = nneg))},
+           error = function(e){
+             message("Optimization failed, trying with Nelder-Mead.")
+             mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot, nneg = nneg), method = "Nelder-Mead")
+           })
 }
