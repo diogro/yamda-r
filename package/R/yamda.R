@@ -37,7 +37,7 @@
 #' Yamda(pop, hypot, factors = TRUE, FALSE)[[1]]
 #' Yamda(pop, hypot, factors = FALSE, FALSE)[[1]]
 Yamda = function(data, hypot_list, factors = TRUE, nneg = FALSE){
-  if(isSymmetric(data)) stop("data argument should be raw data or residuals, not a correlation matrix.")
+  if(isSymmetric(as.matrix(data))) stop("data argument should be raw data or residuals, not a correlation matrix.")
   
   n_models = length(hypot_list)
   

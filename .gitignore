@@ -25,3 +25,4 @@ vignettes/*.pdf
 .Rproj.user
 yamda-r.Rproj
 manuscript/__latexindent_temp.tex
+manuscript/main.synctex.gz
