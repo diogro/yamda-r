@@ -4,7 +4,7 @@
 #'
 #'@param data individual measurements or residuals
 #'@param hypot a single modularity hypothesis
-#'@param nneg Logical. If TRUE, coeficients are non-negative?
+#'@param nneg Logical. If TRUE, coefficients are restricted to being non-negative (expect the background)
 #'@param factors Use factors or z-transform additive correlations
 #'@export
 #'@importFrom bbmle logLik AICc mle2
