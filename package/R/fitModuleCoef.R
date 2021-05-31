@@ -43,7 +43,7 @@ fitModuleCoef <- function(data, hypot, nneg, factors){
     if(!is.finite(minusLL))
       eVal = eigen(Sigma)$values
     if(any(eVal < 0)){
-      #warning("Expexted matrix is no positive definite, bending to correct.")
+      #warning("Expected matrix is no positive definite, bending to correct.")
       Sigma_ext = ExtendMatrix(Sigma, ret.dim = which(eVal < 0)[1] - 1)$ExtMat
       minusLL = -sum(dmvnorm(x, colMeans(x), sigma = Sigma_ext, log = TRUE))
     }
