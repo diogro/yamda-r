@@ -1,10 +1,38 @@
 \section*{Introduction}
 
-Phenotypes are the result of many overlaping genetic effects and developmental processes \citep{Lande1983-ez,Klingenberg2008-ll,Melo2016-yw}. These different 
-factors create a structured pattern of phenotypic correlations, which we can measure and use to infer
-something about the underlying processes. Identifing modules, groups of traits that are more related
-among themselves than with other traits, is a powerful way to describe and interpret the patterns of 
-pheotypic covariation.
+Phenotypes are the result of many overlaping genetic effects and developmental
+processes \citep{Lande1983-ez,Klingenberg2008-ll,Melo2016-yw}. These different
+factors create a structured pattern of phenotypic correlations, which we can
+measure and use to infer something about the underlying processes. Identifing
+modules, groups of traits that are more related among themselves than with other
+traits, is a powerful way to describe and interpret the patterns of pheotypic
+covariation.
+
+Brief review of existing methods:
+
+\begin{itemize}
+    \item CR    
+    \item EMMLi
+    \item Mint
+    \item Mantel
+\end{itemize}
+
+Most methods of comparing different modularity hypothesis don't allow for the
+comparison of nested hypothesis. 
+
+Most are ad-hock measures similarity, and do
+not allow for the use of proper statistical methods. 
+
+The likelihood in EMMLi is
+extrapolated from the expectation on measuring the correlation between two
+traits, and does not acctually use the data in the likelihood computation, only
+the correlations. 
+
+Yamda sets it self appart by using the likelihood of the data to compare the
+different modularity hypothesis, allowing for overlaping modules, allowing
+different methods for the construction of the putative covariance matrix, and
+having 
+
 
 \begin{figure}[h]
     \center
@@ -14,6 +42,7 @@ pheotypic covariation.
 \end{figure} 
 
 \section*{Methods}
+
 
 \subsection*{A maximum likelihood for the modularity hypothesis}
 
