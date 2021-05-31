@@ -24,7 +24,7 @@ calcZTransCoef = function(hypot, x, nneg){
       m1 = penalized(lt(z.x), ~ mod_pred, ~ 1, lambda1 = 0, lambda2 = 0, positive = nneg)
     })
     ztrans_coef = coef(m1,"all")
-    names(ztrans_coef) = c("background", colnames(hypot))
+    names(ztrans_coef) = c("background", paste0("p", colnames(hypot)))
   }
   ztrans_coef
 }

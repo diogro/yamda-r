@@ -60,7 +60,7 @@ Yamda = function(data, hypot_list, factors = TRUE, nneg = FALSE){
   
   # Calculating for each actual hypothesis
   for(i in seq_along(hypot_list)){
-    
+    print(paste("Fitting hypothesis:", i))
     current_hypot = as.matrix(hypot_list[[i]])
     n_modules = ncol(current_hypot)
     

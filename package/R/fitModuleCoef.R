@@ -22,8 +22,8 @@ fitModuleCoef <- function(data, hypot, nneg, factors){
   } else{
     ExpectedMatrix = calcExpectedMatrix
   }
-
-  args = make_alist(c("x", "hypot", "background", mod_names))
+  
+  args = make_alist(c("x", "hypot", "nneg", "background", mod_names))
   body = quote({
     x_sds = apply(x, 2, sd);
     if(length(mod_names) > 0){
@@ -34,16 +34,27 @@ fitModuleCoef <- function(data, hypot, nneg, factors){
     if(nneg){
       nn_pars = pars
       nn_pars[-1] = exp(nn_pars[-1])
-      -sum(dmvnorm(x, colMeans(x), sigma = outer(x_sds, x_sds) * ExpectedMatrix(hypot, nn_pars), log = TRUE))
+      Sigma = outer(x_sds, x_sds) * ExpectedMatrix(hypot, nn_pars)
     }
     else{
-      -sum(dmvnorm(x, colMeans(x), sigma = outer(x_sds, x_sds) * ExpectedMatrix(hypot, pars), log = TRUE))
+      Sigma = outer(x_sds, x_sds) * ExpectedMatrix(hypot, pars)
     }
+    minusLL = -sum(dmvnorm(x, colMeans(x), sigma = Sigma, log = TRUE))
+    if(!is.finite(minusLL))
+      eVal = eigen(Sigma)$values
+    if(any(eVal < 0)){
+      #warning("Expexted matrix is no positive definite, bending to correct.")
+      Sigma_ext = ExtendMatrix(Sigma, ret.dim = which(eVal < 0)[1] - 1)$ExtMat
+      minusLL = -sum(dmvnorm(x, colMeans(x), sigma = Sigma_ext, log = TRUE))
+    }
+    
   })
   f = make_function(args, body)
-  tryCatch({mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot, nneg = nneg))},
-           error = function(e){
-             message("Optimization failed, trying with Nelder-Mead.")
-             mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot, nneg = nneg), method = "Nelder-Mead")
-           })
+  tryCatch({
+    mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot, nneg = nneg))
+  },
+  error = function(e){
+    message("Optimization failed, trying with Nelder-Mead.")
+    mle2(f, start = as.list(initial_params), data = list(x = data, hypot = hypot, nneg = nneg), method = "Nelder-Mead")
+  })
 }
