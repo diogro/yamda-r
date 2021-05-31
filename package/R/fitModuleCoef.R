@@ -10,6 +10,7 @@
 #'@importFrom bbmle logLik AICc mle2
 #'@importFrom car logit
 #'@importFrom mvtnorm dmvnorm	
+#'@importFrom evolqg ExtendMatrix
 fitModuleCoef <- function(data, hypot, nneg, factors){
   
   corr_matrix = cor(data)
@@ -40,14 +41,15 @@ fitModuleCoef <- function(data, hypot, nneg, factors){
       Sigma = outer(x_sds, x_sds) * ExpectedMatrix(hypot, pars)
     }
     minusLL = -sum(dmvnorm(x, colMeans(x), sigma = Sigma, log = TRUE))
-    if(!is.finite(minusLL))
+    if(!is.finite(minusLL)){
       eVal = eigen(Sigma)$values
-    if(any(eVal < 0)){
-      #warning("Expected matrix is no positive definite, bending to correct.")
-      Sigma_ext = ExtendMatrix(Sigma, ret.dim = which(eVal < 0)[1] - 1)$ExtMat
-      minusLL = -sum(dmvnorm(x, colMeans(x), sigma = Sigma_ext, log = TRUE))
+      if(any(eVal < 0)){
+        #warning("Expected matrix is no positive definite, bending to correct.")
+        Sigma_ext = ExtendMatrix(Sigma, ret.dim = which(eVal < 0)[1] - 1)$ExtMat
+        minusLL = -sum(dmvnorm(x, colMeans(x), sigma = Sigma_ext, log = TRUE))
+      }
     }
-    
+    return(minusLL)
   })
   f = make_function(args, body)
   tryCatch({
