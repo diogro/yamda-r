@@ -27,3 +27,4 @@ vignettes/*.pdf
 yamda-r.Rproj
 manuscript/__latexindent_temp.tex
 manuscript/main.synctex.gz
+package/.DS_Store
